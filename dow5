@@ -29,7 +29,7 @@ if m>12:
 day = int(input("Day 1 to 31? "))
 if day>31:
     out_of_range = 1
-if day>30 and (m==9 or m==4 or m==6 or 11):
+if day>30 and (m==9 or m==4 or m==6 or m==11):
     out_of_range = 1
 if day>29 and m==2:
     out_of_range = 1
