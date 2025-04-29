@@ -1,23 +1,30 @@
-
-"""Day of Week (DOW) Calculation (Years 1753 to 9999) - (credits at bottom, www.fuzzywidget.com)
-___new methid taken from YouTube internet, "BE SMART" "How to figure out DOW..."__by John H Conway
-Day of Week (DOW) = [Century # + YY # + Doomsday Adj] for any year
+"""Day of Week (DOW) Calculation (Years 9/14/1752 to 2800)
+I choose therefore to start my algorithm in 1753.  Calculations beyond 2800 are debatable.
+___new method taken from YouTube internet, "BE SMART" "How to figure out DOW..."__by John H Conway
+Day of Week (DOW) = [CC + AA + BB + DD + EE]
+for any year
 (DOW is a number from 0 to 6, Sunday thru Saturday)
-Formula is A + B + C + D + E
+Input is Day/Month/CCYY where CC is century and YY is last two digits, e.g. 2025
 
-CC: Century is        1600   1700   1800   1900
-                     2000   2100   2200   2300
-                     2400   2500   2600   2700 etc etc
-              ---------------------------------
-                       2     0      5      3
-            Note the 400 year repetition.
+CC: Century# is           1700   1800   1900
+                   2000   2100   2200   2300
+                   2400   2500   2600   2700  etc etc
+              ---------------------------------------
+                    2      0      5       3
+Note the 400 year repetition.
 
-AA.  |YY| divide by 12, remove remainder
-BB.  |YY} mod 12 (remainder)
-DD.  |remainder| mod 4
+AA.  int(YY/12)
+BB.  YY modulo 12
+CC.	 Century # from table
+DD.  int(BB/4)
+EE.	 (day - monthx) mod 7
 
-EE. Doomsday numbers (leap year in () )
-    Jan 3 (4), Feb 28 (29), Mar 14, Apr 4, May 9, June 6, July 11, Aug 8, Sep 11, Oct 10, Nov 7, Dec 12 
+      monthx numbers (Note: I prefer not to use the author's "Doomsday" term)
+
+      Note: leap year in ()
+      monthx =         Jan  3 (4),  Feb 28 (29),   Mar 14,   Apr  4,
+                       May  9,      Jun  6,        Jul 11,   Aug  8,
+                       Sep 11,      Oct 10,        Nov  7,   Dec 12 
 """
 
 # input date
@@ -29,7 +36,7 @@ if m>12:
 day = int(input("Day 1 to 31? "))
 if day>31:
     out_of_range = 1
-if day>30 and (m==9 or m==4 or m==6 or 11):
+if day>30 and (m==9 or m==4 or m==6 or m==11):
     out_of_range = 1
 if day>29 and m==2:
     out_of_range = 1
@@ -41,9 +48,8 @@ if y<1753 or y>9999:
 #find last 2 digits of year, modulo 7
 last3digitsofyear = (y%1000)
 last2digitsofyear = (last3digitsofyear%100)
-d = last2digitsofyear%7 #modulo 7
 
-#find last 2 digits of year/4, modulo 7
+#
 AA = int(last2digitsofyear/12)
 BB = (last2digitsofyear%12)
 DD = int(BB/4)
@@ -63,22 +69,20 @@ elif y_m == 0:
 else:
     leap = 0     #("year is not a leap year.")
     
-#Month number program, adj for leap year, table 1
-m_num = 0
+#Month number program, adj for leap year
+monthx = 0
 if out_of_range == 0: 
     if leap == 1 and m == 1:
-        m_num = 4
+        monthx = 4
     elif leap == 1 and m == 2:
-        m_num = 29
+        monthx = 29
     else:
         monthnumlist = (3,28,14,4,9,6,11,8,5,10,7,12)
-        m_num = (monthnumlist[m-1])
+        monthx = (monthnumlist[m-1])
 
-
-b = day
-EE = (day - m_num)%7
+EE = (day - monthx)
     
-#century calc, table 2
+#century
 century = y - y_m_100
 century_xx_m4 = int((century/100)%4)
 centurylist = (2,0,5,3)   
@@ -104,20 +108,20 @@ else:
     print(" ")
     print("The following is the data used to determine the DOW = ",dowlist[dow_num])
     print(" The goal is to do all this in your head.  It is possible. I can do it.")
-    print ("AA.  |YY| divide by 12, remove remainder                 ",AA)
-    print ("BB.  |YY} mod 12 (remainder)                  ",BB)
-    print ("b = day ",b)
-    print ("m_num = ",m_num)
-    print ("CC = year (century #),from table           ",CC)
-    print ("DD |YY} mod 12 (remainder) mod 4 ",DD)
-    print ("EE. Doomsday numbers                 ",EE)
-    print ("Sum of AA+BB+CC+DD+EE = ",dow_nu)
-    print (dow_nu,"modulo 7 = ", dow_num," also written :",dow_nu,"m7")
+    print ("CC = year # (century             ",CC)
+    print ("AA. = int(YY/12)                 ",AA)
+    print ("BB. = YY mod 12                  ",BB)
+    print ("DD = BB mod 4                    ",DD)
+    print ("day =",day)
+    print ("monthx = ",monthx)
+    print ("EE. = (day - monthx)             ",EE)
+    print ("Sum of AA+BB+CC+DD+EE =          ",dow_nu)
+    print (dow_nu,"modulo 7 = DOW number =        ",dow_num,"or",dowlist[dow_num])
     if m>12 or day>31 or y<1753 or y>9999:
         print ("Date may be wrong because, out of range")
     print("Sun Mon Tue Wed Thu Fri Sat")
     print(" 0   1   2   3   4   5   6")
-    print("Note: the year used was ", y)
+    print("Note: m-d-y was                   ",m,"-",day,"-",y)
     
    
 
